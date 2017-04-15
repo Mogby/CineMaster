@@ -40,14 +40,9 @@ CREATE TABLE tickets (
 	user_id integer,
 	seat_id integer,
 	session_id integer,
-	PRIMARY KEY(user_id, seat_id, session_id)
-);
-
-CREATE TABLE seat_cost (
-	seat_id integer,
-	session_id integer,
 	amount money,
-	PRIMARY KEY(seat_id, session_id)
+	sold boolean,
+	PRIMARY KEY(user_id, seat_id, session_id)
 );
 
 CREATE TABLE seats (
