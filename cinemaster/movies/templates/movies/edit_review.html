@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование обзора{% endblock %}
+
+{% block content %}
+<h2>Ваш обзор на фильм {{ movie.title }}</h2>
+<form action="{% url 'movies:post_review' movie.movie_id %}" method="post">
+    {% csrf_token %}
+    Ваша оценка: <br/>
+    {% for rating in "xxxxxxxxxx" %}
+    <input type="radio" name="rating" value="{{ forloop.counter }}"
+     {% if review and review.rating == forloop.counter %} checked {% endif %}/>
+    {{ forloop.counter }}
+    {% endfor %}
+    <br />
+    <textarea name="review" rows="12" cols="80">{% if review %}{{ review.review }}{% endif %}</textarea>
+    <br />
+    <input type="submit" value="Отправить" />
+</form>
+{% endblock %}

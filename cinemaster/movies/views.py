@@ -1,7 +1,9 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import render
 
 import sqlite3
+import datetime
 
 
 def dict_factory(cursor, row):
@@ -18,6 +20,19 @@ def connect(default_factory = False):
     return con
 
 
+def end_expired_sessions():
+    with connect() as con:
+        con.execute('DELETE FROM auth_tokens WHERE expiration_date <= ? ', (str(datetime.datetime.now()),))
+
+
+def verify_token_belongs_to_user(auth_token, user_id):
+    end_expired_sessions()
+    with connect() as con:
+        result = con.execute('SELECT user_id FROM auth_tokens WHERE token = ? AND user_id = ?',
+                             (auth_token, user_id)).fetchall()
+    return True if result else False
+
+
 def index(request):
     with connect() as con:
         movies_list = con.execute('SELECT * FROM movies').fetchall()
@@ -25,7 +40,14 @@ def index(request):
 
 
 def detail(request, movie_id):
+
+    user_id = request.COOKIES.get('user_id')
+    have_review = False
+
     with connect() as con:
+        if user_id:
+            have_review = True if con.execute('SELECT * FROM reviews WHERE movie_id = ? AND user_id = ?',
+                                             (movie_id, user_id)).fetchone() else False
         movie = con.execute('SELECT * FROM movies WHERE movie_id = ?', (movie_id,)).fetchone()
         reviews = con.execute('SELECT * FROM reviews NATURAL JOIN users WHERE movie_id = ?', (movie_id,)).fetchall()
         reviews_count = len(reviews)
@@ -36,7 +58,61 @@ def detail(request, movie_id):
 
     rating = rating_sum / reviews_count
 
+    duration_hours = int(movie['duration'].split('minutes')[0]) // 60
+    duration_minutes = int(movie['duration'].split('minutes')[0]) % 60
     return render(request, 'movies/detail.html',
                   {'movie':movie,
                    'rating':rating,
-                   'reviews': reviews})
+                   'reviews': reviews,
+                   'have_review': have_review,
+                   'duration_hours': duration_hours,
+                   'duration_minutes': duration_minutes})
+
+
+def edit_review(request, movie_id):
+    user_id = request.COOKIES.get('user_id')
+    if not user_id:
+        return HttpResponseRedirect(reverse('movies:index'))
+
+    with connect() as con:
+        review = con.execute('SELECT * FROM reviews WHERE movie_id = ? AND user_id = ?',
+                             (movie_id, user_id)).fetchone()
+        movie = con.execute('SELECT * FROM movies WHERE movie_id = ?', (movie_id,)).fetchone()
+
+    return render(request, 'movies\edit_review.html', {'movie':movie, 'review':review})
+
+
+def post_review(request, movie_id):
+    user_id = request.COOKIES.get('user_id')
+    auth_token = request.COOKIES.get('auth_token')
+
+    if not user_id or not auth_token or not verify_token_belongs_to_user(auth_token, user_id):
+        return HttpResponseRedirect(reverse('movies:detail', kwargs={'movie_id':movie_id}))
+
+    with connect() as con:
+        review = con.execute('SELECT * FROM reviews WHERE movie_id = ? AND user_id = ?',
+                             (movie_id, user_id)).fetchone()
+        if review:
+            con.execute('UPDATE reviews SET rating = ?, review = ? WHERE user_id = ? AND movie_id = ?;',
+                        (request.POST['rating'], request.POST['review'], user_id, movie_id))
+        else:
+            con.execute('INSERT INTO reviews VALUES (?, ?, ?, ?);',
+                        (movie_id, user_id, request.POST['rating'], request.POST['review']))
+
+        con.commit()
+
+    return HttpResponseRedirect(reverse('movies:detail', kwargs={'movie_id':movie_id}))
+
+
+def delete_review(request, movie_id):
+    user_id = request.COOKIES.get('user_id')
+    auth_token = request.COOKIES.get('auth_token')
+
+    if not user_id or not auth_token or not verify_token_belongs_to_user(auth_token, user_id):
+        return HttpResponseRedirect(reverse('movies:detail', kwargs={'movie_id': movie_id}))
+
+    with connect() as con:
+        con.execute('DELETE FROM reviews WHERE user_id = ? AND movie_id = ?;', (user_id, movie_id))
+        con.commit()
+
+    return HttpResponseRedirect(reverse('movies:detail', kwargs={'movie_id': movie_id}))

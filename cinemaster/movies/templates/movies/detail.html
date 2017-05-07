@@ -5,14 +5,41 @@
 {% block content %}
 <div class="movie-info">
     <h2>{{ movie.title }}</h2>
-    <p>
-        <ul>
+    <ul>
         <li>
             Год выхода: {{ movie.release_year }}
         </li>
-        </ul>
-    </p>
+        <li>
+            Режиссер: {{ movie.director }}
+        </li>
+        <li>
+            Язык: {{ movie.language }}
+        </li>
+        <li>
+            Субтитры: {{ movie.subtitles }}
+        </li>
+        <li>
+            Возрастные ограничения: {{ movie.age_restriction }}+
+        </li>
+        <li>
+            Продолжительность: {{ duration_hours }}:{{ duration_minutes }}
+        </li>
+        <li>
+            Кассовые сборы: {{ movie.box_office }}
+        </li>
+        <li>
+            Рейтинг: {{ rating }}
+        </li>
+    </ul>
 </div>
+
+{% if have_review %}
+<a href="{% url 'movies:edit_review' movie.movie_id %}">Редактировать обзор</a>
+<br/>
+<a href="{% url 'movies:delete_review' movie.movie_id %}">Удалить обзор</a>
+{% elif request.COOKIES.user_id %}
+<a href="{% url 'movies:edit_review' movie.movie_id %}">Написать обзор</a>
+{% endif %}
 
 {% for review in reviews %}
 <div class="review">
