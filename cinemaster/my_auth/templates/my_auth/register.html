@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+{% if error_messages %}
+<ul>
+{% for message in error_messages %}
+    <li><strong>{{ error_message }}</strong></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<form action="{% url 'my_auth:add_user' %}" method="post">
+{% csrf_token %}
+    <h2>Регистрация нового пользователя</h2>
+    Логин для входа на сайт:<br />
+    <input type="text" name="login" /> <br />
+    Имя, которое будет отображаться у других пользователей: <br />
+    <input type="text" name="display-name" /> <br />
+    Пароль: <br />
+    <input type="password" name="password" /> <br />
+    Повторите пароль: <br />
+    <input type="password" name="double-check-password" /> <br />
+    <input type="submit" text="Зарегистрироваться">
+</form>
+{% endblock %}

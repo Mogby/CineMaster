@@ -1,21 +1,13 @@
 CREATE TABLE users (
 	user_id integer,
-	password char(64),
+	password character(64),
 	display_name varchar(32),
-	PRIMARY KEY(user_id)
-);
 
-CREATE TABLE reviews (
-	movie_id integer,
-	user_id integer,
-	rating integer,
-	review text,
-	PRIMARY KEY(movie_id, user_id)
+	PRIMARY KEY(user_id)
 );
 
 CREATE TABLE movies (
 	movie_id integer,
-	poster bytea,
 	title varchar(256),
 	release_year integer,
 	director varchar(256),
@@ -24,7 +16,19 @@ CREATE TABLE movies (
 	age_restriction integer,
 	duration interval,
 	box_office money,
+
 	PRIMARY KEY(movie_id)
+);
+
+CREATE TABLE reviews (
+	movie_id integer,
+	user_id integer,
+	rating integer,
+	review text,
+
+	FOREIGN KEY (movie_id) REFERENCES movies(movie_id),
+	FOREIGN KEY (user_id) REFERENCES users(user_id),
+	UNIQUE (movie_id, user_id)
 );
 
 CREATE TABLE sessions (
@@ -33,16 +37,8 @@ CREATE TABLE sessions (
 	begin_time timestamp,
 	end_time timestamp,
 	hall_no integer,
-	PRIMARY KEY(session_id)
-);
 
-CREATE TABLE tickets (
-	user_id integer,
-	seat_id integer,
-	session_id integer,
-	amount money,
-	sold boolean,
-	PRIMARY KEY(user_id, seat_id, session_id)
+	PRIMARY KEY(session_id)
 );
 
 CREATE TABLE seats (
@@ -51,5 +47,28 @@ CREATE TABLE seats (
 	row_no integer,
 	seat_no integer,
 	special_features varchar(32),
+
 	PRIMARY KEY(seat_id)
+);
+
+CREATE TABLE tickets (
+	user_id integer,
+	seat_id integer,
+	session_id integer,
+	amount money,
+	sold boolean,
+
+	FOREIGN KEY (user_id) REFERENCES users(user_id),
+	FOREIGN KEY (seat_id) REFERENCES seats(seat_id),
+	FOREIGN KEY (session_id) REFERENCES sessions(session_id),
+	UNIQUE (seat_id, session_id)
+);
+
+CREATE TABLE auth_tokens (
+    user_id integer,
+    token character(64), 
+    expiration_date timestamp,
+
+    FOREIGN KEY (user_id) references users(user_id),
+    UNIQUE (user_id)
 );
