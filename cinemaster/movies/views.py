@@ -1,3 +1,9 @@
+import hashlib
+
+m = hashlib.sha256()
+m.update(b'123456')
+print(m.hexdigest())
+
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 
