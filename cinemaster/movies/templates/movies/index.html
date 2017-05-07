@@ -7,7 +7,7 @@
     Сейчас в показе:
     <ul>
     {% for movie in movies_list %}
-        <li>{{ movie.title }}</li>
+        <li><a href="{% url 'movies:detail' movie.movie_id %}">{{ movie.title }}</a></li>
     {% endfor %}
     </ul>
     </p>
