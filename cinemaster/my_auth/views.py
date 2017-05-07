@@ -126,7 +126,6 @@ def login(request):
 def logout(request):
     end_session(request)
 
-    log('bar')
     response = HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     response.delete_cookie('display_name')
     response.delete_cookie('user_id')

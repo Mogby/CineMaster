@@ -23,6 +23,14 @@
     <a href="{% url 'my_auth:logout' %}">Выход</a>
 </div>
 {% endif %}
+
+<div class="navigation">
+    <ul>
+        <li><a href="{% url 'movies:index' %}">Главная</a></li>
+        <li><a href="{% url 'session:index' %}">Сеансы</a></li>
+    </ul>
+</div>
+
 <div class="content">
     {% block content %}
     {% endblock %}

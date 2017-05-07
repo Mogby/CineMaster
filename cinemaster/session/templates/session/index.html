@@ -5,11 +5,9 @@
 {% block content %}
 {% for session in sessions %}
 <p>
-    Фильм: {{ session.title }}
-</p>
-<p>
-    Время показа: {{ session.begin_time.year }}.{{ session.begin_time.month }}.{{ session.begin_time.day }}
-    {{ session.begin_time.hour }}:{{ session.begin_time.minute }}
+    Фильм: {{ session.title }} <br />
+    Начало показа: {{ session.begin_time }} <br />
+    <a href="{% url 'session:book' session.movie_id %}">Перейти к бронированию мест</a>
 </p>
 {% endfor %}
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Бронирование{% endblock %}
+
+{% block content %}
+<form action="{% url 'session:buy_tickets' session_id %}" method="post">
+    {% csrf_token %}
+    {% for seat in free_seats %}
+    <input type="checkbox" name="seat_id" value="{{ seat.seat_id }}" />
+    Ряд {{ seat.row_no }}, место {{ seat.seat_no }}. Тип: {{ seat.special_features }}. Цена: {{ seat.amount }}.
+    <br />
+    {% endfor %}
+    {% if request.COOKIES.auth_token %}
+    <input type="submit" value="Бронировать" />
+    {% else %}
+    Войдите на сайт, чтобы бронировать места.
+    {% endif %}
+</form>
+{% endblock %}
