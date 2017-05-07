@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="movie-info">
+    <h2>{{ movie.title }}</h2>
+    <p>
+        <ul>
+        <li>
+            Дата выхода: {{ movie.release_date|date:"Y.m.d" }}
+        </li>
+        </ul>
+    </p>
+</div>
+
+{% for review in reviews %}
+<div class="review">
+    <p>Оценка: {{ review.rating }}</p>
+    <p>Дата: {{ review.pub_date|date"Y.m.d" }}</p>
+    <p>
+        {{ review.review }}
+    </p>
+</div>
+{% endfor %}
+{% endblock %}
