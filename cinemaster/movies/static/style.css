@@ -1,0 +1,85 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+div {
+    //border-style: solid;
+    //border-color: white;
+    //border-radius: 5px;
+    margin: 14px;
+}
+
+.main {
+    float: left;
+    width: 90%;
+}
+
+.login-box {
+    border-style: solid;
+    border-color: white;
+    border-radius: 5px;
+
+    float: left;
+    width: 25%;
+    margin: 14px;
+    padding: 8px;
+}
+
+.content {
+    border-style: solid;
+    border-color: white;
+    border-radius: 5px;
+
+    float: left;
+    width: 65%;
+    margin: 14px;
+    padding: 8px;
+}
+
+.navigation {
+    margin: 14px;
+    padding: 10px;
+
+    border-style: solid;
+    border-color: white;
+    border-radius: 5px;
+}
+
+.nav-item {
+    display: inline-block;
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-style: none solid none solid;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: orange;
+    vertical-align: middle;
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.movie-info {
+    float: left;
+}
+
+.movie-poster {
+    float: right;
+}
+
+.review-box {
+    clear: both;
+}
+
+.review {
+    border-style: solid none none none;
+    padding: 4px;
+}

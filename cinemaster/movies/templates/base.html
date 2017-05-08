@@ -1,38 +1,46 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <title>CineMaster -- {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
 </head>
-{% if not request.COOKIES.auth_token %}
-<p>{{ request.COOKIES.auth_token }}</p>
-<div class="login-box">
-    {{ request.COOKIES.auth_token }}
-    <form action="{% url 'my_auth:login' %}" method="post">
-        {% csrf_token %}
-        Логин:<br />
-        <input type="text" name="login"/><br />
-        Пароль:<br />
-        <input type="password" name="password"><br />
-        <input type="submit" value="Вход">
-    </form>
-    <a href="{% url 'my_auth:register' %}">Регистрация</a>
+<div class="head" style="text-align:center;">
+    <h1 class="site-name">CineMaster</h1>
 </div>
-{% else %}
-<div class="login-box">
-    Здравствуй, {{ request.COOKIES.display_name }}! <br />
-    <a href="{% url 'my_auth:logout' %}">Выход</a>
-</div>
-{% endif %}
 
-<div class="navigation">
-    <ul>
-        <li><a href="{% url 'movies:index' %}">Главная</a></li>
-        <li><a href="{% url 'session:index' %}">Сеансы</a></li>
+<div>
+    <ul class="navigation">
+        <a href="{% url 'movies:index' %}"><li class="nav-item">Главная</li></a>
+        <a href="{% url 'session:index' %}"><li class="nav-item">Сеансы</li></a>
     </ul>
 </div>
 
-<div class="content">
-    {% block content %}
-    {% endblock %}
+<div class="main">
+    {% if not request.COOKIES.auth_token %}
+    <div class="login-box">
+        {{ request.COOKIES.auth_token }}
+        <form action="{% url 'my_auth:login' %}" method="post">
+            {% csrf_token %}
+            Логин:<br />
+            <input type="text" name="login"/><br />
+            Пароль:<br />
+            <input type="password" name="password"><br />
+            <input type="submit" value="Вход">
+        </form>
+        <a href="{% url 'my_auth:register' %}">Регистрация</a>
+    </div>
+    {% else %}
+    <div class="login-box">
+        Здравствуй, {{ request.COOKIES.display_name }}! <br />
+        <a href="{% url 'my_auth:logout' %}">Выход</a>
+    </div>
+    {% endif %}
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
 </div>
+
 </html>

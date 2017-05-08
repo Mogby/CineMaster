@@ -1,53 +1,66 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}{{ movie.title }}{% endblock %}
 
 {% block content %}
-<div class="movie-info">
-    <h2>{{ movie.title }}</h2>
-    <ul>
-        <li>
-            Год выхода: {{ movie.release_year }}
-        </li>
-        <li>
-            Режиссер: {{ movie.director }}
-        </li>
-        <li>
-            Язык: {{ movie.language }}
-        </li>
-        <li>
-            Субтитры: {{ movie.subtitles }}
-        </li>
-        <li>
-            Возрастные ограничения: {{ movie.age_restriction }}+
-        </li>
-        <li>
-            Продолжительность: {{ duration_hours }}:{{ duration_minutes }}
-        </li>
-        <li>
-            Кассовые сборы: {{ movie.box_office }}
-        </li>
-        <li>
-            Рейтинг: {{ rating }}
-        </li>
-    </ul>
+<div class="movie-description">
+    <div class="movie-info">
+        <h2>{{ movie.title }}</h2>
+        <ul>
+            <li>
+                Год выхода: {{ movie.release_year }}
+            </li>
+            <li>
+                Режиссер: {{ movie.director }}
+            </li>
+            <li>
+                Язык: {{ movie.language }}
+            </li>
+            <li>
+                Субтитры: {{ movie.subtitles }}
+            </li>
+            <li>
+                Возрастные ограничения: {{ movie.age_restriction }}+
+            </li>
+            <li>
+                Продолжительность: {{ duration_hours }}:{{ duration_minutes }}
+            </li>
+            <li>
+                Кассовые сборы: {{ movie.box_office }}
+            </li>
+            <li>
+                Рейтинг: {{ rating }}
+            </li>
+        </ul>
+    </div>
+    <div class="movie-poster">
+        {% with movie.movie_id|stringformat:"i" as movie_id_str %}
+        {% with 'movies/posters/'|add:movie_id_str|add:'.jpg' as image_static %}
+        <img src="{% static image_static %}" width="240px" />
+        {% endwith %}
+        {% endwith %}
+    </div>
 </div>
 
-{% if have_review %}
-<a href="{% url 'movies:edit_review' movie.movie_id %}">Редактировать обзор</a>
-<br/>
-<a href="{% url 'movies:delete_review' movie.movie_id %}">Удалить обзор</a>
-{% elif request.COOKIES.user_id %}
-<a href="{% url 'movies:edit_review' movie.movie_id %}">Написать обзор</a>
-{% endif %}
+<div class="review-box">
+    {% if have_review %}
+    <a href="{% url 'movies:edit_review' movie.movie_id %}">Редактировать обзор</a>
+    <br/>
+    <a href="{% url 'movies:delete_review' movie.movie_id %}">Удалить обзор</a>
+    {% elif request.COOKIES.user_id %}
+    <a href="{% url 'movies:edit_review' movie.movie_id %}">Написать обзор</a>
+    {% endif %}
 
-{% for review in reviews %}
-<div class="review">
-    <p>Обзор пользователя {{ review.display_name }}</p>
-    <p>Оценка: {{ review.rating }}</p>
-    <p>
-        {{ review.review }}
-    </p>
+    {% for review in reviews %}
+    <div class="review">
+        <p>Обзор пользователя <strong>{{ review.display_name }}</strong>:</p>
+        <p>Оценка: <strong>{{ review.rating }}</strong></p>
+        <p>
+            {{ review.review }}
+        </p>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}
