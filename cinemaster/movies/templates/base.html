@@ -32,7 +32,7 @@
     </div>
     {% else %}
     <div class="login-box">
-        Здравствуй, {{ request.COOKIES.display_name }}! <br />
+        Здравствуй, {{ request.COOKIES.login }}! <br />
         <a href="{% url 'my_auth:logout' %}">Выход</a>
     </div>
     {% endif %}

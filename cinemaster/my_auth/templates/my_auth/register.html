@@ -14,10 +14,8 @@
 <form action="{% url 'my_auth:add_user' %}" method="post">
 {% csrf_token %}
     <h2>Регистрация нового пользователя</h2>
-    Логин для входа на сайт:<br />
+    Логин:<br />
     <input type="text" name="login" /> <br />
-    Имя, которое будет отображаться у других пользователей: <br />
-    <input type="text" name="display-name" /> <br />
     Пароль: <br />
     <input type="password" name="password" /> <br />
     Повторите пароль: <br />

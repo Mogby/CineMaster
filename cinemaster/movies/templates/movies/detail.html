@@ -55,7 +55,7 @@
 
     {% for review in reviews %}
     <div class="review">
-        <p>Обзор пользователя <strong>{{ review.display_name }}</strong>:</p>
+        <p>Обзор пользователя <strong>{{ review.login }}</strong>:</p>
         <p>Оценка: <strong>{{ review.rating }}</strong></p>
         <p>
             {{ review.review }}
