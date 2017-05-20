@@ -69,10 +69,17 @@ a:hover {
 
 .movie-info {
     float: left;
+    clear: left;
 }
 
 .movie-poster {
     float: right;
+    clear: right;
+}
+
+.movie-summary {
+    clear: both;
+    padding: 14px;
 }
 
 .review-box {

@@ -27,17 +27,16 @@ def detail(request, movie_id):
     if not movie:
         raise Http404("Фильм не существует")
 
-    rating = rating_sum / reviews_count
+    if reviews_count:
+        rating = rating_sum / reviews_count
+    else:
+        rating = None
 
-    duration_hours = int(movie['duration'].split('minutes')[0]) // 60
-    duration_minutes = int(movie['duration'].split('minutes')[0]) % 60
     return render(request, 'movies/detail.html',
                   {'movie':movie,
                    'rating':rating,
                    'reviews': reviews,
-                   'have_review': have_review,
-                   'duration_hours': duration_hours,
-                   'duration_minutes': duration_minutes})
+                   'have_review': have_review})
 
 
 def edit_review(request, movie_id):

@@ -7,7 +7,7 @@
 <p>
     Фильм: {{ session.title }} <br />
     Начало показа: {{ session.begin_time }} <br />
-    <a href="{% url 'session:book' session.movie_id %}">Перейти к бронированию мест</a>
+    <a href="{% url 'session:book' session.session_id %}">Перейти к бронированию мест</a>
 </p>
 {% endfor %}
 {% endblock %}

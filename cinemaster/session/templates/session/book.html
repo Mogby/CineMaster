@@ -7,7 +7,9 @@
     {% csrf_token %}
     {% for seat in free_seats %}
     <input type="checkbox" name="seat_id" value="{{ seat.seat_id }}" />
-    Ряд {{ seat.row_no }}, место {{ seat.seat_no }}. Тип: {{ seat.special_features }}. Цена: {{ seat.amount }}.
+        Ряд {{ seat.row_no }}, место {{ seat.seat_no }}.
+        Тип: {% if seat.special_features != 'NULL' %}{{ seat.special_features }}{% else %}обычное место{% endif %}.
+        Цена: {{ seat.amount }}.
     <br />
     {% endfor %}
     {% if request.COOKIES.auth_token %}

@@ -19,32 +19,37 @@
                 Язык: {{ movie.language }}
             </li>
             <li>
-                Субтитры: {{ movie.subtitles }}
+                Субтитры: {% if movie.subtitles %}{{ movie.subtitles }}{% else %}нет{% endif %}
             </li>
             <li>
-                Возрастные ограничения: {{ movie.age_restriction }}+
+                Возрастные ограничения:
+                {% if movie.age_restriction %}{{ movie.age_restriction }}{% else %}нет{% endif %}
             </li>
             <li>
-                Продолжительность: {{ duration_hours }}:{{ duration_minutes }}
+                Продолжительность: {{ movie.duration }} минут
             </li>
             <li>
-                Кассовые сборы: {{ movie.box_office }}
+                Кассовые сборы: {% if movie.box_office %}{{ movie.box_office }}{% else %}не известны{% endif %}
             </li>
             <li>
-                Рейтинг: {{ rating }}
+                Рейтинг: {% if rating %}{{ rating }}{% else %}не известен{% endif %}
             </li>
         </ul>
     </div>
+{% if movie.poster %}
     <div class="movie-poster">
-        {% with movie.movie_id|stringformat:"i" as movie_id_str %}
-        {% with 'movies/posters/'|add:movie_id_str|add:'.jpg' as image_static %}
-        <img src="{% static image_static %}" width="240px" />
-        {% endwith %}
-        {% endwith %}
+        <img src="{{  movie.poster }}" width="240px" />
     </div>
+{% endif %}
+{% if movie.description %}
+    <div class="movie-summary">
+        <p>{{ movie.description }}</p>
+    </div>
+{% endif %}
 </div>
 
 <div class="review-box">
+    <div style="text-align: center;">
     {% if have_review %}
     <a href="{% url 'movies:edit_review' movie.movie_id %}">Редактировать обзор</a>
     <br/>
@@ -52,6 +57,7 @@
     {% elif request.COOKIES.user_id %}
     <a href="{% url 'movies:edit_review' movie.movie_id %}">Написать обзор</a>
     {% endif %}
+    </div>
 
     {% for review in reviews %}
     <div class="review">
